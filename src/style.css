@@ -1,0 +1,117 @@
+:root {
+  /* HSL Colors */
+  --primary-h: 45;
+  --primary-s: 96%;
+  --primary-l: 64%;
+  --primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
+  --secondary: hsl(38, 92%, 50%);
+  --bg: hsl(222, 47%, 11%);
+  --text: hsl(210, 40%, 98%);
+  --muted: hsl(215, 25%, 65%);
+  --gradient: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+  --mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  font-family: var(--sans);
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 50% 50%, hsla(var(--primary-h), var(--primary-s), var(--primary-l), 0.15) 0%, transparent 60%),
+    radial-gradient(circle at 10% 10%, hsla(var(--primary-h), var(--primary-s), var(--primary-l), 0.05) 0%, transparent 30%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+#app {
+  text-align: center;
+  padding: 2rem;
+  max-width: 600px;
+  animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+  font-size: clamp(3rem, 10vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  font-size: 1.25rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.versions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.badge {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  color: var(--primary);
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s;
+  cursor: default;
+}
+
+.badge:hover {
+  transform: scale(1.05);
+  border-color: var(--primary);
+}
+
+.badge span {
+  color: var(--text);
+  margin-left: 0.5rem;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f8fafc;
+    --text: #0f172a;
+    --muted: #64748b;
+  }
+  .badge {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+}
