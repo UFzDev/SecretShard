@@ -1,5 +1,5 @@
 {
-  "name": "template-bun",
+  "name": "secret-shard",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,5 +11,23 @@
   "devDependencies": {
     "typescript": "~5.9.3",
     "vite": "5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UFzDev/SecretShard.git"
+  },
+  "homepage": "https://github.com/UFzDev/SecretShard#readme",
+  "bugs": {
+    "url": "https://github.com/UFzDev/SecretShard/issues"
+  },
+  "keywords": [
+    "shamir",
+    "secret-sharing",
+    "zero-knowledge",
+    "cryptography",
+    "bun",
+    "vite"
+  ],
+  "author": "UFzDev",
+  "license": "MIT"
 }
