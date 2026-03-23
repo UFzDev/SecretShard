@@ -1,44 +1,52 @@
 import './style.css'
 
 /**
- * Initializes the application dashboard by injecting the template into the DOM.
- * Follows the visual and structural standards for a premium experience.
+ * Manages the theme switching logic (Light/Dark).
  */
-function initApp(): void {
-  const appContainer = document.querySelector<HTMLDivElement>('#app');
+function setupTheme(): void {
+  const html = document.documentElement;
+  const toggleBtnId = 'theme-toggle';
+  
+  const getSystemPreference = () => 
+    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
-  if (!appContainer) {
-    console.error('App container not found');
-    return;
-  }
+  const applyTheme = (theme: string) => {
+    if (theme === 'dark') {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+  };
 
-  appContainer.innerHTML = `
-    <header>
-      <h1>SecretShard</h1>
-    </header>
-    
-    <main>
-      <section class="content-section">
-        <p>
-          SecretShard es una implementación del <strong>Esquema de Shamir</strong> para dividir secretos en partes seguras.
-        </p>
-      </section>
+  // 1. Initial State
+  const savedTheme = localStorage.getItem('theme');
+  const initialTheme = savedTheme || getSystemPreference();
+  applyTheme(initialTheme);
 
-      <section class="content-section">
-        <h2>Cómo funciona</h2>
-        <ul class="feature-list">
-          <li class="feature-item"><strong>Divide:</strong> Tu secreto se fragmenta en varias piezas.</li>
-          <li class="feature-item"><strong>Protege:</strong> Ninguna pieza individual revela nada del secreto.</li>
-          <li class="feature-item"><strong>Recupera:</strong> Solo con el mínimo de piezas configurado puedes volver a unirlo.</li>
-        </ul>
-      </section>
-    </main>
+  // 2. Logic to toggle
+  const toggleTheme = () => {
+    const isDark = html.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  };
 
-    <footer class="footer">
-      <p>Desarrollado con Bun + TypeScript</p>
-    </footer>
-  `;
+  // 3. Sync with OS changes (if no manual choice was made)
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+      applyTheme(e.matches ? 'dark' : 'light');
+    }
+  });
+
+  // 4. Attach Event
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (target.closest(`#${toggleBtnId}`)) {
+      toggleTheme();
+    }
+  });
 }
 
-// Ensure the auth or other dependencies are ready if needed
-initApp();
+
+// 🚀 Initialization
+setupTheme();
+
+

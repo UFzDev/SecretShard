@@ -1,16 +1,68 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="SecretShard: Implementación segura del Esquema de Shamir para fragmentación de secretos." />
-    <meta property="og:title" content="SecretShard" />
-    <meta property="og:description" content="Fracciona y protege tus secretos con arquitectura Zero-Knowledge." />
-    <title>SecretShard | Seguridad Zero-Knowledge</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="SecretShard: Implementación segura del Esquema de Shamir para fragmentación de secretos." />
+  <meta property="og:title" content="SecretShard" />
+  <meta property="og:description" content="Fracciona y protege tus secretos con arquitectura Zero-Knowledge." />
+  <title>SecretShard | Seguridad Zero-Knowledge</title>
+</head>
+
+<body>
+  <div id="app">
+    <div class="theme-toggle-container">
+      <button id="theme-toggle" class="theme-toggle-btn" aria-label="Cambiar tema">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2" />
+          <path d="M12 20v2" />
+          <path d="m4.93 4.93 1.41 1.41" />
+          <path d="m17.66 17.66 1.41 1.41" />
+          <path d="M2 12h2" />
+          <path d="M20 12h2" />
+          <path d="m6.34 17.66-1.41 1.41" />
+          <path d="m19.07 4.93-1.41 1.41" />
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+      </button>
+    </div>
+
+    <header>
+      <h1>SecretShard</h1>
+    </header>
+
+    <main>
+      <section class="content-section">
+        <p>
+          SecretShard es una implementación del <strong>Esquema de Shamir</strong> para dividir secretos en partes
+          seguras.
+        </p>
+      </section>
+
+      <section class="content-section">
+        <h2>Cómo funciona</h2>
+        <ul class="feature-list">
+          <li class="feature-item"><strong>Divide:</strong> Tu secreto se fragmenta en varias piezas.</li>
+          <li class="feature-item"><strong>Protege:</strong> Ninguna pieza individual revela nada del secreto.</li>
+          <li class="feature-item"><strong>Recupera:</strong> Solo con el mínimo de piezas configurado puedes volver a
+            unirlo.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Desarrollado con Bun + TypeScript</p>
+    </footer>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
