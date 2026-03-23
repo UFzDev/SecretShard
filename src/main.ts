@@ -7,8 +7,6 @@ function setupTheme(): void {
   const html = document.documentElement;
   const toggleBtnId = 'theme-toggle';
   
-  const getSystemPreference = () => 
-    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
   const applyTheme = (theme: string) => {
     if (theme === 'dark') {
@@ -18,10 +16,9 @@ function setupTheme(): void {
     }
   };
 
-  // 1. Initial State
-  const savedTheme = localStorage.getItem('theme');
-  const initialTheme = savedTheme || getSystemPreference();
-  applyTheme(initialTheme);
+  // 1. Initial State: Solo sincronizamos si hay cambios manuales posteriores.
+  // La carga inicial la gestiona el script bloqueante en index.html para evitar FOUC.
+
 
   // 2. Logic to toggle
   const toggleTheme = () => {

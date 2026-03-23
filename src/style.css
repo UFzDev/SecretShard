@@ -51,7 +51,7 @@ body {
   position: relative;
 }
 
-/* --- Mobile First & Responsiveness --- */
+/* Mobile First & Responsiveness */
 @media (max-width: 640px) {
   body {
     padding: 1rem;
@@ -67,7 +67,7 @@ body {
   }
 }
 
-/* Theme Toggle Button Layout */
+/* Layout del botón de cambio de tema */
 .theme-toggle-container {
   display: flex;
   justify-content: center;
@@ -106,7 +106,7 @@ body {
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
 }
 
-/* Icon positioning and motion */
+/* Posicionamiento y movimiento de iconos */
 .theme-toggle-btn .sun-icon {
   opacity: 1;
   transform: rotate(0) scale(1);
@@ -117,7 +117,7 @@ body {
   transform: rotate(90deg) scale(0);
 }
 
-/* When dark mode is active */
+/* Cuando el modo oscuro está activo */
 html.dark .theme-toggle-btn .sun-icon {
   opacity: 0;
   transform: rotate(-90deg) scale(0);
@@ -194,8 +194,3 @@ p {
   font-size: 0.875rem;
   color: var(--muted);
 }
-
-
-
-
-

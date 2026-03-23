@@ -9,7 +9,17 @@
     content="SecretShard: Implementación segura del Esquema de Shamir para fragmentación de secretos." />
   <meta property="og:title" content="SecretShard" />
   <meta property="og:description" content="Fracciona y protege tus secretos con arquitectura Zero-Knowledge." />
-  <title>SecretShard | Seguridad Zero-Knowledge</title>
+  <title>SecretShard</title>
+  <link rel="stylesheet" href="/src/style.css" />
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
 </head>
 
 <body>
