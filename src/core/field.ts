@@ -26,7 +26,7 @@ const EXP = new Uint8Array(512);
 })();
 
 /**
- * Suma (y resta) en GF(256) es equivalente a un XOR atómico.
+ * Suma (y resta) en GF(256) es equivalente a un XOR.
  */
 export const add = (a: number, b: number): number => (a ^ b) & 0xFF;
 

@@ -1,0 +1,37 @@
+:root {
+  --primary: #10b981;
+  --primary-glow: rgba(16, 185, 129, 0.2);
+  --bg: #f8fafc;
+  --panel-bg: rgba(255, 255, 255, 0.7);
+  --panel-border: rgba(255, 255, 255, 0.8);
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --input-focus: #10b981;
+  --font-outfit: 'Outfit', sans-serif;
+  --theme-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.dark {
+  --bg: #020617;
+  --panel-bg: rgba(15, 23, 42, 0.6);
+  --panel-border: rgba(51, 65, 85, 0.4);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border: #1e293b;
+  --shadow-panel: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text-main);
+  font-family: var(--font-outfit);
+  line-height: 1.6;
+}

@@ -1,0 +1,19 @@
+/* Transicion Global para cambios de tema */
+body, 
+.top-nav, 
+.icon-btn, 
+.config-panel, 
+.results-panel, 
+.panel-header, 
+label, 
+textarea, 
+input,
+.share-card-item, 
+.outline-btn, 
+.minimal-footer {
+  transition: background-color var(--theme-transition), 
+              color var(--theme-transition), 
+              border-color var(--theme-transition), 
+              box-shadow var(--theme-transition),
+              background var(--theme-transition);
+}

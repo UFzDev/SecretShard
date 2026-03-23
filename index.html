@@ -5,12 +5,11 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description"
-    content="SecretShard: Implementación segura del Esquema de Shamir para fragmentación de secretos." />
-  <meta property="og:title" content="SecretShard" />
-  <meta property="og:description" content="Fracciona y protege tus secretos con arquitectura Zero-Knowledge." />
+  <meta name="description" content="SecretShard: Fragmentación segura de secretos con el Esquema de Shamir." />
   <title>SecretShard</title>
-  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
   <script>
     (function () {
       const savedTheme = localStorage.getItem('theme');
@@ -23,55 +22,84 @@
 </head>
 
 <body>
-  <div id="app">
-    <div class="theme-toggle-container">
-      <button id="theme-toggle" class="theme-toggle-btn" aria-label="Cambiar tema">
-        <svg xmlns="http://www.w3.org/2000/svg" class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="4" />
-          <path d="M12 2v2" />
-          <path d="M12 20v2" />
-          <path d="m4.93 4.93 1.41 1.41" />
-          <path d="m17.66 17.66 1.41 1.41" />
-          <path d="M2 12h2" />
-          <path d="M20 12h2" />
-          <path d="m6.34 17.66-1.41 1.41" />
-          <path d="m19.07 4.93-1.41 1.41" />
-        </svg>
-        <svg xmlns="http://www.w3.org/2000/svg" class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-        </svg>
-      </button>
-    </div>
+  <div id="app" class="full-width-layout">
+    <nav class="top-nav">
+      <div class="brand">
+        <h1>SecretShard</h1>
+      </div>
+      <div class="nav-actions">
+        <button id="theme-toggle" class="icon-btn" aria-label="Cambiar tema">
+          <svg xmlns="http://www.w3.org/2000/svg" class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2" />
+            <path d="M12 20v2" />
+            <path d="m4.93 4.93 1.41 1.41" />
+            <path d="m17.66 17.66 1.41 1.41" />
+            <path d="M2 12h2" />
+            <path d="M20 12h2" />
+            <path d="m6.34 17.66-1.41 1.41" />
+            <path d="m19.07 4.93-1.41 1.41" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" class="moon-icon" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+          </svg>
+        </button>
+      </div>
+    </nav>
 
-    <header>
-      <h1>SecretShard</h1>
-    </header>
+    <main class="dashboard-content">
+      <section class="config-panel">
+        <div class="panel-header">
+          <h2>Configuración</h2>
+        </div>
 
-    <main>
-      <section class="content-section">
-        <p>
-          SecretShard es una implementación del <strong>Esquema de Shamir</strong> para dividir secretos en partes
-          seguras.
-        </p>
+        <div class="input-grid">
+          <div class="input-card wide">
+            <div class="input-label-row">
+              <label for="secret-input">Contenido del Secreto</label>
+              <span id="char-counter" class="counter">0 / 2000</span>
+            </div>
+            <textarea id="secret-input" placeholder="Ingresa el secreto aquí..." maxlength="2000"></textarea>
+          </div>
+
+          <div class="input-card">
+            <label for="threshold-range">Umbral mínimo (k): <span id="threshold-val" class="val-badge">3</span></label>
+            <input type="range" id="threshold-range" min="2" max="10" value="3">
+            <p class="hint">Fragmentos necesarios para la recuperación.</p>
+          </div>
+
+          <div class="input-card">
+            <label for="shares-range">Total de fragmentos (n): <span id="shares-val" class="val-badge">5</span></label>
+            <input type="range" id="shares-range" min="2" max="25" value="5">
+            <p class="hint">Total de piezas que se generarán.</p>
+          </div>
+        </div>
+
+        <div class="action-footer">
+          <button id="split-btn" class="main-action-btn">
+            <span>Generar Fragmentos Seguros</span>
+          </button>
+        </div>
       </section>
 
-      <section class="content-section">
-        <h2>Cómo funciona</h2>
-        <ul class="feature-list">
-          <li class="feature-item"><strong>Divide:</strong> Tu secreto se fragmenta en varias piezas.</li>
-          <li class="feature-item"><strong>Protege:</strong> Ninguna pieza individual revela nada del secreto.</li>
-          <li class="feature-item"><strong>Recupera:</strong> Solo con el mínimo de piezas configurado puedes volver a
-            unirlo.</li>
-        </ul>
+      <section id="results-panel" class="results-panel hidden">
+        <div class="panel-header">
+          <h2>Resultados de Fragmentación</h2>
+          <button id="copy-all-btn" class="outline-btn">Copiar Todo</button>
+        </div>
+        <div id="shares-grid" class="shares-display-grid">
+          <!-- Dynamically populated -->
+        </div>
       </section>
     </main>
 
-    <footer class="footer">
-      <p>Desarrollado con Bun + TypeScript</p>
+    <footer class="minimal-footer">
+      <p>SecretShard 1.0 | Aislamiento mediante GF(256)</p>
     </footer>
   </div>
+
   <script type="module" src="/src/main.ts"></script>
 </body>
 
