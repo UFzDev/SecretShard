@@ -53,60 +53,117 @@
       </div>
     </nav>
 
+    <nav class="tabs-nav">
+      <div class="tabs-container">
+        <button class="tab-trigger active" data-tab="split">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20L4 4m16 0L4 20"/></svg>
+          <span>Fragmentar</span>
+        </button>
+        <button class="tab-trigger" data-tab="combine">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+          <span>Reconstruir</span>
+        </button>
+      </div>
+    </nav>
+
     <main class="dashboard-content">
-      <section class="config-panel">
-        <div class="panel-header">
-          <h2>Configuración</h2>
-        </div>
-
-        <div class="input-grid">
-          <div class="input-card wide">
-            <div class="input-label-row">
-              <label for="secret-input">Contenido del Secreto</label>
-              <span id="char-counter" class="counter">0 / 2000</span>
-            </div>
-            <textarea id="secret-input" placeholder="Ingresa el secreto aquí..." maxlength="2000"></textarea>
-          </div>
-
-          <div class="input-card">
-            <label for="threshold-range">Umbral mínimo (k): <span id="threshold-val" class="val-badge">3</span></label>
-            <input type="range" id="threshold-range" min="2" max="10" value="3">
-            <p class="hint">Fragmentos necesarios para la recuperación.</p>
-          </div>
-
-          <div class="input-card">
-            <label for="shares-range">Total de fragmentos (n): <span id="shares-val" class="val-badge">5</span></label>
-            <input type="range" id="shares-range" min="2" max="25" value="5">
-            <p class="hint">Total de piezas que se generarán.</p>
-          </div>
-        </div>
-
-        <div class="action-footer">
-          <button id="split-btn" class="main-action-btn">
-            <span>Generar Fragmentos Seguros</span>
-          </button>
-        </div>
-      </section>
-
-      <section id="results-panel" class="results-panel hidden">
-        <div class="panel-header">
-          <h2>Resultados de Fragmentación</h2>
-          <button id="copy-all-btn" class="outline-btn">Copiar Todo</button>
-        </div>
-        <div id="shares-grid" class="shares-display-grid"></div>
-
-        <div class="chart-section">
+      <!-- Tab 1: Fragmentar -->
+      <div id="pane-split" class="tab-pane active">
+        <section class="config-panel">
           <div class="panel-header">
-            <h2>Análisis de Fragmentación</h2>
-            <button id="toggle-view-btn" class="outline-btn">Ver Visión Global</button>
+            <h2>Configuración</h2>
+          </div>
+
+          <div class="input-grid">
+            <div class="input-card wide">
+              <div class="input-label-row">
+                <label for="secret-input">Contenido del Secreto</label>
+                <span id="char-counter" class="counter">0 / 2000</span>
+              </div>
+              <textarea id="secret-input" placeholder="Ingresa el secreto aquí..." maxlength="2000"></textarea>
+            </div>
+
+            <div class="input-card">
+              <label for="threshold-range">Umbral mínimo (k): <span id="threshold-val" class="val-badge">3</span></label>
+              <input type="range" id="threshold-range" min="2" max="10" value="3">
+              <p class="hint">Fragmentos necesarios para la recuperación.</p>
+            </div>
+
+            <div class="input-card">
+              <label for="shares-range">Total de fragmentos (n): <span id="shares-val" class="val-badge">5</span></label>
+              <input type="range" id="shares-range" min="2" max="25" value="5">
+              <p class="hint">Total de piezas que se generarán.</p>
+            </div>
+          </div>
+
+          <div class="action-footer">
+            <button id="split-btn" class="main-action-btn">
+              <span>Generar Fragmentos Seguros</span>
+            </button>
+          </div>
+        </section>
+
+        <section id="results-panel" class="results-panel hidden">
+          <div class="panel-header">
+            <h2>Resultados de Fragmentación</h2>
+            <button id="copy-all-btn" class="outline-btn">Copiar Todo</button>
+          </div>
+          <div id="shares-grid" class="shares-display-grid"></div>
+
+          <div class="chart-section">
+            <div class="panel-header">
+              <h2>Análisis de Fragmentación</h2>
+              <button id="toggle-view-btn" class="outline-btn">Ver Visión Global</button>
+            </div>
+            <div class="chart-container">
+              <canvas id="viz-chart"></canvas>
+            </div>
+            <p class="hint">La curva es una analogía en el plano real, la fragmentación segura opera en un dominio
+              discreto (GF256), como muestra la "Visión Global".</p>
+          </div>
+        </section>
+      </div>
+
+      <!-- Tab 2: Reconstruir -->
+      <div id="pane-combine" class="tab-pane">
+        <section class="config-panel">
+          <div class="panel-header">
+            <h2>Recuperación de Secreto</h2>
+          </div>
+          <p class="section-desc">Ingresa al menos <strong>k</strong> fragmentos (uno por línea o separados por comas) para reconstruir el secreto original.</p>
+          
+          <div class="input-card wide">
+            <label for="fragments-input">Fragmentos (Formato: x-valorHex)</label>
+            <textarea id="fragments-input" placeholder="Ejemplo:&#10;1-5f2a...&#10;2-a1b2..." rows="8"></textarea>
+          </div>
+
+          <div class="action-footer">
+            <button id="combine-btn" class="main-action-btn variant-secondary">
+              <span>Recuperar Secreto</span>
+            </button>
+          </div>
+        </section>
+
+        <section id="reconstruction-results" class="results-panel hidden">
+          <div class="panel-header">
+            <h2>Secreto Recuperado</h2>
+            <button id="copy-secret-btn" class="outline-btn">Copiar Secreto</button>
+          </div>
+          <div class="recovered-content">
+            <div id="recovered-secret-text" class="secret-display-area"></div>
+          </div>
+        </section>
+
+        <section id="recon-chart-panel" class="results-panel hidden">
+          <div class="panel-header">
+            <h2>Visualización de Recuperación</h2>
           </div>
           <div class="chart-container">
-            <canvas id="viz-chart"></canvas>
+            <canvas id="recon-chart"></canvas>
           </div>
-          <p class="hint">La curva es una analogía en el plano real, la fragmentación segura opera en un dominio
-            discreto (GF256), como muestra la "Visión Global".</p>
-        </div>
-      </section>
+          <p class="hint">Interpolación basada en los fragmentos proporcionados. El secreto se recupera en x=0.</p>
+        </section>
+      </div>
     </main>
 
     <footer class="minimal-footer">

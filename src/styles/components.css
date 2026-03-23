@@ -27,7 +27,7 @@
 /* Input Cards & Grid */
 .input-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2.5rem;
 }
@@ -100,6 +100,12 @@ input[type="range"] {
 }
 
 /* Buttons */
+.action-footer {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
 .main-action-btn {
   display: flex;
   align-items: center;
@@ -170,7 +176,7 @@ html.dark .icon-btn .moon-icon { opacity: 1; transform: rotate(0) scale(1); }
 /* Results Grid & Cards */
 .shares-display-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
 }
 
@@ -228,6 +234,41 @@ html.dark .icon-btn .moon-icon { opacity: 1; transform: rotate(0) scale(1); }
 }
 
 @media (max-width: 768px) {
-  .config-panel { padding: 1.5rem; }
+  .config-panel, .results-panel { padding: 1.25rem; }
   .chart-container { height: 250px; }
+}
+
+/* Secondary Button Variant */
+.main-action-btn.variant-secondary {
+  background: var(--text-main);
+  color: var(--bg);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.main-action-btn.variant-secondary:hover {
+  background: var(--text-muted);
+}
+
+/* Reconstruction Specifics */
+.section-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.recovered-content {
+  background: var(--bg);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+}
+
+.secret-display-area {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-main);
+  word-break: break-word;
+  white-space: pre-wrap;
 }

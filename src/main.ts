@@ -1,12 +1,48 @@
 import { Chart, registerables } from 'chart.js';
-import { split } from './core';
+import { split, combine } from './core';
 
 Chart.register(...registerables);
 
 let vizChart: Chart | null = null;
+let reconChart: Chart | null = null;
 let currentChartMode: 'polynomial' | 'global' = 'polynomial';
 let lastSecret: string = '';
 let lastShares: any[] = [];
+
+/**
+ * Gestión de Pestañas (Tabs).
+ */
+function setupTabs(): void {
+  const triggers = document.querySelectorAll('.tab-trigger');
+  const panes = document.querySelectorAll('.tab-pane');
+
+  const activateTab = (tabId: string) => {
+    // Actualizar botones
+    triggers.forEach(t => {
+      const isTarget = (t as HTMLElement).dataset.tab === tabId;
+      t.classList.toggle('active', isTarget);
+    });
+
+    // Actualizar paneles
+    panes.forEach(pane => {
+      const isTarget = pane.id === `pane-${tabId}`;
+      pane.classList.toggle('active', isTarget);
+    });
+
+    localStorage.setItem('activeTab', tabId);
+  };
+
+  triggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const target = (trigger as HTMLElement).dataset.tab;
+      if (target) activateTab(target);
+    });
+  });
+
+  // Restaurar pestaña previa
+  const savedTab = localStorage.getItem('activeTab') || 'split';
+  activateTab(savedTab);
+}
 
 /**
  * Gestión del Tema (Light/Dark).
@@ -174,6 +210,177 @@ function setupSplitLogic(): void {
 }
 
 /**
+ * Lógica de Reconstrucción (Combine).
+ */
+function setupCombineLogic(): void {
+  const fragmentsInput = document.getElementById('fragments-input') as HTMLTextAreaElement;
+  const combineBtn = document.getElementById('combine-btn');
+  const resultsPanel = document.getElementById('reconstruction-results');
+  const secretDisplay = document.getElementById('recovered-secret-text');
+  const copyBtn = document.getElementById('copy-secret-btn');
+
+  combineBtn?.addEventListener('click', () => {
+    const rawInput = fragmentsInput.value.trim();
+    if (!rawInput) return;
+
+    // Procesar líneas: "1-5f2a..." o separadas por comas/espacios
+    const lines = rawInput.split(/[\n,;]+/).filter(l => l.trim() !== "");
+    
+    try {
+      const parsedShares = lines.map(line => {
+        const parts = line.trim().split('-');
+        if (parts.length !== 2) throw new Error("Formato inválido. Usa 'x-valorHex'");
+        
+        return {
+          x: parseInt(parts[0]),
+          y: parts[1]
+        };
+      });
+
+      const recoveredSecret = combine(parsedShares);
+      
+      if (secretDisplay) {
+        secretDisplay.textContent = recoveredSecret;
+      }
+
+      if (resultsPanel) {
+        resultsPanel.classList.remove('hidden');
+        resultsPanel.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      // Visualización
+      const reconChartPanel = document.getElementById('recon-chart-panel');
+      if (reconChartPanel) {
+        reconChartPanel.classList.remove('hidden');
+        const plotPoints = parsedShares.map(s => ({ x: s.x, y: parseInt(s.y.substring(0, 2), 16) }));
+        
+        // Para que el punto rojo toque la línea, calculamos el valor en x=0 
+        // usando la misma aritmética de la curva (Reales).
+        const visualSecretVal = calculateRealLagrange(0, plotPoints);
+        reconChart = renderReconstructionChart(visualSecretVal, plotPoints, reconChart);
+      }
+
+    } catch (err: any) {
+      alert(`Error al reconstruir: ${err.message}`);
+    }
+  });
+
+  copyBtn?.addEventListener('click', () => {
+    if (secretDisplay?.textContent) {
+      navigator.clipboard.writeText(secretDisplay.textContent);
+    }
+  });
+}
+
+/**
+ * Cálculo de Interpolación de Lagrange sobre Números Reales (Visual).
+ */
+function calculateRealLagrange(x: number, pts: { x: number, y: number }[]): number {
+  let total = 0;
+  for (let i = 0; i < pts.length; i++) {
+    let basis = 1;
+    for (let j = 0; j < pts.length; j++) {
+      if (i !== j) {
+        basis *= (x - pts[j].x) / (pts[i].x - pts[j].x);
+      }
+    }
+    total += pts[i].y * basis;
+  }
+  return total;
+}
+
+/**
+ * Visualización de Reconstrucción (Lagrange sobre Reales).
+ */
+function renderReconstructionChart(visualSecretVal: number, points: { x: number, y: number }[], existingChart: Chart | null): Chart | null {
+  const ctx = document.getElementById('recon-chart') as HTMLCanvasElement;
+  if (!ctx) return null;
+
+  if (existingChart) {
+    existingChart.destroy();
+  }
+
+  const isDark = document.documentElement.classList.contains('dark');
+  const primaryColor = '#3b82f6'; // Azul para reconstrucción
+  const secretColor = '#ef4444';
+  const textColor = isDark ? '#94a3b8' : '#64748b';
+  const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
+
+  const curveData = [];
+  const xValues = points.map(p => p.x);
+  const minX = Math.min(0, ...xValues);
+  const maxX = Math.max(0, ...xValues);
+  
+  for (let x = minX - 0.5; x <= maxX + 0.5; x += 0.1) {
+    curveData.push({ x, y: calculateRealLagrange(x, points) });
+  }
+
+  return new Chart(ctx, {
+    type: 'line',
+    data: {
+      datasets: [
+        {
+          label: 'Curva de Recuperación',
+          data: curveData,
+          borderColor: primaryColor,
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false,
+          tension: 0.1
+        },
+        {
+          label: 'Secreto Recuperado',
+          data: [{ x: 0, y: visualSecretVal }],
+          backgroundColor: secretColor,
+          pointRadius: 7,
+          pointHoverRadius: 9,
+          type: 'scatter'
+        },
+        {
+          label: 'Fragmentos Proporcionados',
+          data: points,
+          backgroundColor: primaryColor,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          type: 'scatter'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              const p = context.parsed;
+              if (context.datasetIndex === 1) return `Recuperado: ${p.y} (dec)`;
+              if (context.datasetIndex === 2) return `Fragmento ${p.x}: ${p.y} (dec)`;
+              return '';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          position: 'bottom',
+          grid: { color: gridColor },
+          ticks: { color: textColor, stepSize: 1 },
+          title: { display: true, text: 'ID de Fragmento (x)', color: textColor }
+        },
+        y: {
+          grid: { color: gridColor },
+          ticks: { color: textColor },
+          title: { display: true, text: 'Valor del Byte (y)', color: textColor }
+        }
+      }
+    }
+  });
+}
+
+/**
  * Visualización Real usando Interpolación de Lagrange (sobre Reales).
  * Si isGlobal es true, muestra una nube de puntos de todos los bytes.
  */
@@ -192,25 +399,11 @@ function renderRealChart(secretVal: number, points: { x: number, y: number }[], 
 
   const allPoints = [{ x: 0, y: secretVal }, ...points];
   
-  const lagrange = (x: number, pts: {x: number, y: number}[]) => {
-    let total = 0;
-    for (let i = 0; i < pts.length; i++) {
-      let basis = 1;
-      for (let j = 0; j < pts.length; j++) {
-        if (i !== j) {
-          basis *= (x - pts[j].x) / (pts[i].x - pts[j].x);
-        }
-      }
-      total += pts[i].y * basis;
-    }
-    return total;
-  };
-
   const curveData = [];
   const maxIdx = Math.max(...allPoints.map(p => p.x));
   
   for (let x = -0.5; x <= maxIdx + 0.5; x += 0.1) {
-    curveData.push({ x, y: lagrange(x, allPoints) });
+    curveData.push({ x, y: calculateRealLagrange(x, allPoints) });
   }
 
   return new Chart(ctx, {
@@ -284,7 +477,9 @@ function renderRealChart(secretVal: number, points: { x: number, y: number }[], 
 
 // 🚀 Inicialización
 document.addEventListener('DOMContentLoaded', () => {
+  setupTabs();
   setupTheme();
   setupCharacterCounter();
   setupSplitLogic();
+  setupCombineLogic();
 });
