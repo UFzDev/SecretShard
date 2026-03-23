@@ -10,6 +10,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/base.css">
+  <link rel="stylesheet" href="/src/styles/layout.css">
+  <link rel="stylesheet" href="/src/styles/components.css">
+  <link rel="stylesheet" href="/src/styles/main.css">
   <script>
     (function () {
       const savedTheme = localStorage.getItem('theme');
@@ -89,8 +93,18 @@
           <h2>Resultados de Fragmentación</h2>
           <button id="copy-all-btn" class="outline-btn">Copiar Todo</button>
         </div>
-        <div id="shares-grid" class="shares-display-grid">
-          <!-- Dynamically populated -->
+        <div id="shares-grid" class="shares-display-grid"></div>
+
+        <div class="chart-section">
+          <div class="panel-header">
+            <h2>Análisis de Fragmentación</h2>
+            <button id="toggle-view-btn" class="outline-btn">Ver Visión Global</button>
+          </div>
+          <div class="chart-container">
+            <canvas id="viz-chart"></canvas>
+          </div>
+          <p class="hint">La curva es una analogía en el plano real, la fragmentación segura opera en un dominio
+            discreto (GF256), como muestra la "Visión Global".</p>
         </div>
       </section>
     </main>

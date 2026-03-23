@@ -210,6 +210,24 @@ html.dark .icon-btn .moon-icon { opacity: 1; transform: rotate(0) scale(1); }
 
 .copy-btn-mini:hover { color: var(--primary); }
 
+/* Gráfica */
+.chart-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px dashed var(--border);
+}
+
+.chart-container {
+  position: relative;
+  height: 300px;
+  width: 100%;
+  margin: 1.5rem 0;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
 @media (max-width: 768px) {
   .config-panel { padding: 1.5rem; }
+  .chart-container { height: 250px; }
 }
